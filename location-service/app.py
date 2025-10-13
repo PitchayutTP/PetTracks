@@ -7,7 +7,7 @@ from pyngrok import ngrok
 app = Flask(__name__)
 CORS(app)
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://user:password@localhost:5432/pettrack")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://user:password@postgres:5432/pettrack")
 
 @app.route('/')
 def index():

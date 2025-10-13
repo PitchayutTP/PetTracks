@@ -77,7 +77,7 @@ let updateInterval = null;
 
 async function fetchLatestLocation() {
   try {
-    const res = await fetch("http://localhost:5000/locations/latest");
+    const res = await fetch("/locations/latest");
     if (!res.ok) return;
 
     const loc = await res.json();

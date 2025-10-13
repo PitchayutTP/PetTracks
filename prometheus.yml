@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'user-pet-service'
+    static_configs:
+      - targets: ['user-pet-service:3000']
+
+  - job_name: 'location-service'
+    static_configs:
+      - targets: ['location-service:5000']

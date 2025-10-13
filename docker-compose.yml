@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pettrack
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+
+  user-pet-service:
+    container_name: user_pet_service
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/pettrack
+      JWT_SECRET: mysecret
+    depends_on:
+      - postgres
+    restart: always
+
+  location-service:
+    container_name: location_service
+    build:
+      context: ./location-service
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/pettrack
+    depends_on:
+      - postgres
+    restart: always
+
+  frontend:
+    container_name: frontend_app
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80" # เข้าถึง frontend ผ่านพอร์ต 8080
+    depends_on:
+      - user-pet-service
+      - location-service
+    restart: always
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    restart: always
+
+volumes:
+  postgres_data:
