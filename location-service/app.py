@@ -2,7 +2,6 @@ import os
 import psycopg2
 from flask import Flask, request, jsonify, render_template_string
 from flask_cors import CORS
-from pyngrok import ngrok
 
 app = Flask(__name__)
 CORS(app)
@@ -60,17 +59,4 @@ def log_location():
             conn.close()
 
 if __name__ == '__main__':
-    try:
-        if os.environ.get("NGROK_AUTHTOKEN"):
-            listener = ngrok.connect(5000)
-            print("-" * 50)
-            print(f"*** NGROK TUNNEL ESTABLISHED ***")
-            print(f"Public URL: {listener.public_url}")
-            print("-" * 50)
-        else:
-            print("⚠️ NGROK_AUTHTOKEN not set. Running locally only.")
-            
-        app.run(host='0.0.0.0', port=5000, debug=False)
-
-    except Exception as e:
-        print(f"❌ NGROK/FLASK STARTUP ERROR: {e}")
+    app.run(host='0.0.0.0', port=5000, debug=False)
