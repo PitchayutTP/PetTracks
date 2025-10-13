@@ -43,7 +43,7 @@ services:
     container_name: ngrok_service
     restart: always
     environment:
-      - NGROK_AUTHTOKEN=YOUR_NGROK_AUTHTOKEN_HERE # <-- ใส่ Authtoken ของคุณตรงนี้
+      - NGROK_AUTHTOKEN=341Qw6gaogcj89oHBRMsSomD923_41B4RXmcGb4aAiPuHSyH8 # <-- ใส่ Authtoken ของคุณตรงนี้
     command: http location-service:5000
 
   frontend:
