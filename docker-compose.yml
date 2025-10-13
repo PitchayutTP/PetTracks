@@ -43,7 +43,7 @@ services:
     container_name: ngrok_service
     restart: always
     environment:
-      - NGROK_AUTHTOKEN=341Qw6gaogcj89oHBRMsSomD923_41B4RXmcGb4aAiPuHSyH8 # <-- ใส่ Authtoken ของคุณตรงนี้
+      - NGROK_AUTHTOKEN=341Qw6gaogcj89oHBRMsSomD923_41B4RXmcGb4aAiPuHSyH8 # <-- ใส่ Authtoken ของคุณ
     command: http location-service:5000
 
   frontend:
@@ -67,5 +67,31 @@ services:
       - "9090:9090"
     restart: always
 
+  # --- เพิ่ม Jenkins Service ---
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: always
+    ports:
+      - "8081:8080"  # เข้า Jenkins ผ่านพอร์ต 8081 (เพราะ 8080 ถูกใช้แล้ว)
+      - "50000:50000" # สำหรับเชื่อมต่อกับ Agent
+    volumes:
+      - jenkins_home:/var/jenkins_home
+
+  # --- เพิ่ม Grafana Service ---
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    restart: always
+    ports:
+      - "3001:3000" # เข้า Grafana ผ่านพอร์ต 3001 (เพราะ 3000 ถูกใช้แล้ว)
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+    depends_on:
+      - prometheus
+
 volumes:
   postgres_data:
+  jenkins_home:   # <-- เพิ่ม Volume สำหรับ Jenkins
+  grafana_data:   # <-- เพิ่ม Volume สำหรับ Grafana
